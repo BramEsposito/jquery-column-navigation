@@ -52,30 +52,40 @@
  *	
  *	<html>
  *	<body>
- *		<ul id="myTree">
- *			<li>
- *				<a href="./">Homepage</a>
- *				<ul>
- *					<li><a href="./contact">Contact</a></li>
- *					<li><a href="./tsandcs">Terms &amp; Conditions</a></li>
- *					<li><a href="./privacy">Privacy information</a></li>
- *				</ul>
+ *	<div id="myTree">
+ *		<ul>
+ *			<div>	<!-- required to allow scrolling within each column -->
+ *				<li>
+ *					<a href="./">Homepage</a>
+ *					<ul>
+ *						<div>
+ *							<li><a href="./contact">Contact</a></li>
+ *							<li><a href="./tsandcs">Terms &amp; Conditions</a></li>
+ *							<li><a href="./privacy">Privacy information</a></li>
+ *						</div>
+ *					</ul>
  *				</li>
  *				<li>
  *					<a href="./contents">Contents</a>
  *					<ul>
- *						<li><a href="./page1/">Page 1</a></li>
- *						<li>
- *							<a href="./page2/">Page 2</a>
- *							<ul>
- *								<li><a href="./page2.1/">Page 2.1</a></li>
- *								<li><a href="./page2.2/">Page 2.2</a></li>
- *							</ul>
- *						</li>
- *						<li><a href="./page3/">Page 3</a></li>
+ *						<div>
+ *							<li><a href="./page1/">Page 1</a></li>
+ *							<li>
+ *								<a href="./page2/">Page 2</a>
+ *								<ul>
+ *									<div>
+ *									<li><a href="./page2.1/">Page 2.1</a></li>
+ *									<li><a href="./page2.2/">Page 2.2</a></li>
+ *									</div>
+ *								</ul>
+ *							</li>
+ *							<li><a href="./page3/">Page 3</a></li>
+ *						</div>
  *					</ul>
  *				</li>
+ *			</div>
  *		</ul>
+ *	</div>
  *	</body>
  *	</html>
  *	
@@ -95,12 +105,12 @@
  *	
  *	---
  *	
- *	$("#myTree").conlumnNavigation({
+ *	$("div#myTree").conlumnNavigation({
  *		containerBackgroundColor	: "rgb(255,255,255)",
  *		columnFontFamily			: "Arial,sans-serif",
  *		columnScrollVelocity		: 400,
- *		callBackFunction			: function( obj ) {
- *			alert( $(obj).attr("href") );
+ *		callBackFunction			: function() {
+ *			alert( $(linkObject).attr("href") );
  *		}
  *	});
  *	
@@ -125,11 +135,11 @@
 		}
 				
 		// Setup the selectors
-		if( jQuery.nodeName(this, "ul") )
+		if( $(this).get(0).tagName == "UL" )
 		{
 			var selectorName = "ul";
 		}
-		else if( jQuery.nodeName(this,"ol") )
+		else if( $(this).get(0).tagName == "OL" )
 		{
 			var selectorName = "ol";
 		}
@@ -245,14 +255,14 @@
 		var myself = $(wrapper);
 
 		// Hide and layout children beneath the first level
-		$(wrapper).find("ul:first").find("ul").css({
+		$(wrapper).find(selectorName+":first").find("ul").css({
 			left:columnWidth,
 			top:"0px",
 			position:"absolute"
 		}).hide();
 
 		// Style the columns
-		$(wrapper).find("ul").css({
+		$(wrapper).find(selectorName).css({
 			position:"absolute",
 			width:columnWidth,
 			height:"100%",
@@ -262,17 +272,17 @@
 		});
 		
 		// Create the additional required divs
-		$(wrapper).find("ul").wrapInner(document.createElement("div"));
+		$(wrapper).find(selectorName).wrapInner(document.createElement("div"));
 		
 		// Ensure each level can scroll within the container
-		$(wrapper).find("ul div").css({
+		$(wrapper).find(selectorName+" div").css({
 			height:"100%",
 			overflowX:"hidden",
 			overflowY:"auto"
 		});
 				
 		// Style the internals
-		$(wrapper).find("ul li").css({
+		$(wrapper).find(selectorName+" li").css({
 			listStyle:"none",
 			padding:configuration.columnItemPadding,
 			backgroundColor:configuration.columnDeselectBackgroundColor,
@@ -282,18 +292,18 @@
 		});
 		
 		// Style the unselected links (this overrides specific CSS styles on the page)
-		$(wrapper).find("li a").css(
+		$(wrapper).find(selectorName+" a").css(
 			aDeselect
 			);		
 		
 		// Setup the onclick function for each link within the tree
-		$(wrapper).find("li a").click( function(){
+		$(wrapper).find(selectorName+" a").click( function(){
 			
 			// Discover where this element is on the page
 			var licoords = $(this).parent().offset();			// li position
 			
 			// Hide lower levels
-			$(this).parent().siblings().find("ul").hide();
+			$(this).parent().siblings().find(selectorName).hide();
 			
 			// Deselect other levels
 			$(this).parent().siblings().css( liDeselect );						
@@ -305,7 +315,7 @@
 			$(this).parent().siblings().find("a").css( aDeselect );
 			
 			// Show child menu
-			$(this).parent().find("ul:first").show();
+			$(this).parent().find(selectorName+":first").show();
 			
 			// Select this level
 			$(this).parent().css( liSelect );
@@ -326,7 +336,7 @@
 		});
 		
 		// Double decides on task.
-		$(wrapper).find("ul li a").dblclick( function() {
+		$(wrapper).find(selectorName+" li a").dblclick( function() {
 			
 			// If there is no callback function, use the existing link
 			if( configuration.callBackFunction == null )
