@@ -200,7 +200,7 @@
 		// A element deselect state
 		var aDeselect = {
 			color:configuration.columnDeselectColor,
-			fontFamily:configuration.columnDeselectFontFamily,
+			fontFamily:configuration.columnFontFamily,
 			fontSize:configuration.columnFontSize,
 			textDecoration:"none",
 			fontWeight:"normal",
@@ -212,7 +212,6 @@
 		// A element select state
 		var aSelect = {
 			color:configuration.columnSelectColor,
-			fontFamily:configuration.columnSelectFontFamily,
 			textDecoration:"none"
 		};
 		
