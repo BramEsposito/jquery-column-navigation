@@ -1,7 +1,7 @@
 /**
  *  jQuery Column Navigation Plugin
  *	
- *	version 1.2.0
+ *	version 1.3.0
  *	
  *	Written by Sam Clark
  *	http://sam.clark.name
@@ -117,6 +117,7 @@
 (function($){
 	$.fn.columnNavigation = function( configuration )
 	{
+		if ($(this).length == 0) return;
 		// Check for incoming ul or ol element
 		if( $(this).get(0).tagName != "UL" && $(this).get(0).tagName != "OL" )
 		{
@@ -310,7 +311,7 @@
 			$(this).parent().siblings().find("li").css( liDeselect );
 			
 			// Deselect other a links
-			$(this).parent().siblings().find("a").css( aDeselect );
+			$(this).parent().siblings().find("a.active").css( aDeselect );
 			
 			// Show child menu
 			$(this).parent().find(selectorName+":first").show();
@@ -319,7 +320,7 @@
 			$(this).parent().css( liSelect );
 			
 			// Highlight the text if required
-			$(this).css( aSelect );
+			$(this).css( aSelect ).addClass("active");
 			
 			// Add scrolling if required
 			if( (licoords.left - containerPosition.left + ( ( configuration.columnWidth * 2 ) - 1 ) > containerSize ) )
